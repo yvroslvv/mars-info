@@ -1,0 +1,4 @@
+    $("[data-who]").each(function(index, element) {
+    element.removeAttribute("data-who");
+    })
+    $('#particles').attr('data-option',$('#particles').attr('data-option').replace('|waterMark|:false', ''))

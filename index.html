@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mars</title>
+  <link rel="stylesheet" type="text/css" href="styles/master.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js" integrity="sha512-3WGIRFCuTpZhqYujwLp5RtARPkOy3uRtc3RXB31bJ9/i6VH2C66Z0WBV6gHhdhbUIDKFx8yTkLfEjdQM5Wl+ZQ==" crossorigin="anonymous"></script>
+</head>
+<body>
+    <script src="js/three.min.js"></script>
+    <script src="js/GLTFLoader.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <div id="menu_1">
+        <a href="mars.html">start</a>
+    </div>
+    <div class="cursor">
+        <div class="text">Mars</div>
+        <div class="text">Mars</div>
+        <div class="text">Mars</div>
+        <div class="text">Mars</div>
+        <div class="text"><span>Mars</span></div>
+    </div>
+    <div id="canvas-container"> </div>
+    <script id="3d">
+        let scene, camera, renderer, container;
+            init();
+
+        function init() {
+ 
+            renderer = new THREE.WebGLRenderer({alpha: true, antialias:true});
+            
+            var container = document.getElementById('canvas-container');
+            var w = container.offsetWidth;
+            var h = container.offsetHeight;
+            renderer.setSize(w,h);
+            container.appendChild(renderer.domElement);
+            
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(10, w / h, 1, 5000);
+            camera.rotation.y = 45/180*Math.PI;
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 1300;
+
+            controls = new THREE.OrbitControls(camera,renderer.domElement);
+            controls.addEventListener('change', renderer);
+            controls.minDistance = 1150;
+            controls.maxDistance = 1600;
+            controls.rotateSpeed = 0.6;
+            
+            hlight = new THREE.AmbientLight (0xffffff,1);
+            scene.add(hlight);
+            
+            directionalLight = new THREE.DirectionalLight(0xffffff,10);
+            directionalLight.position.set(0,1,0);
+            directionalLight.castShadow = false;
+           
+            scene.add(directionalLight);
+            light = new THREE.PointLight(0xffffff,1);
+            light.position.set(0,300,500);
+            scene.add(light);
+            light2 = new THREE.PointLight(0xffffff,1);
+            light2.position.set(500,100,0);
+            scene.add(light2);
+            light3 = new THREE.PointLight(0xffffff,1);
+            light3.position.set(0,100,-500);
+            scene.add(light3);
+            light4 = new THREE.PointLight(0xffffff,1);
+            light4.position.set(-500,300,500);
+            scene.add(light4);
+
+            let loader = new THREE.GLTFLoader();
+            loader.load('scene.gltf', function(gltf){
+                mars = gltf.scene;
+                scene.add(mars);
+                animate();
+            });
+        }
+            
+        function animate() {
+            renderer.render(scene,camera);
+            requestAnimationFrame(animate);
+
+            if (mars) {
+                mars.rotation.y += 0.0005;
+            }
+        }
+
+
+    </script>
+    <script id="cursor">
+        document.addEventListener("mousemove", e => {
+            gsap.to(".text", {
+                x: e.clientX,
+                y: e.clientY,
+                stagger: -0.009
+            });
+        });       
+   </script>
+    <script id="particles" src="https://d23jutsnau9x47.cloudfront.net/back/v1.0.9/viewer.js" data-option="{|environment|:{|gradient|:|horizontal|,|sensitivity|:0.5,|colorStart|:[0,0,0,1],|colorEnd|:[0,0,0,1]},|particle|:{|life|:5,|power|:0.001,|texture|:|https://res.cloudinary.com/naker-io/image/upload/v1566560053/star_01.png|,|number|:537,|colorStart|:[0,0,0,0.13],|colorEnd|:[187,199,255,0.52],|sizeStart|:0.19,|sizeEnd|:0.38,|direction1|:{|x|:100,|y|:100,|z|:100},|direction2|:{|x|:-100,|y|:-100,|z|:-100}},|waterMark|:false}" ></script>
+    <script src="js/cursor.json"></script>
+</body>
+</html>
